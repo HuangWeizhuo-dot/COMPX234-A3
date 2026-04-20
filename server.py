@@ -18,3 +18,14 @@ def handle_client(conn):
 
 if __name__ == "__main__":
     main()
+import socket
+import threading
+import time
+
+tuple_space = {}
+lock = threading.Lock()
+
+def handle_client(conn):
+    with lock:
+        pass
+    conn.close()
