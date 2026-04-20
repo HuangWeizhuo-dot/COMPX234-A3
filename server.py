@@ -29,3 +29,14 @@ def handle_client(conn):
     with lock:
         pass
     conn.close()
+def format_length(s):
+    return f"{len(s):03d}"
+
+def handle_client(conn):
+    while True:
+        len_head = conn.recv(3).decode().strip()
+        if not len_head:
+            break
+        data = conn.recv(int(len_head)).decode()
+        # process command later
+    conn.close()
