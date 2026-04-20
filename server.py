@@ -40,3 +40,25 @@ def handle_client(conn):
         data = conn.recv(int(len_head)).decode()
         # process command later
     conn.close()
+def handle_client(conn):
+    while True:
+        len_head = conn.recv(3).decode().strip()
+        if not len_head:
+            break
+        data = conn.recv(int(len_head)).decode()
+        parts = data.split(maxsplit=2)
+        cmd, key = parts[0], parts[1]
+        val = parts[2] if len(parts)>=3 else ''
+        
+        with lock:
+            if cmd == 'P':
+                res = 'OK added' if key not in tuple_space else 'ERR exists'
+            elif cmd == 'R':
+                res = tuple_space.get(key, 'ERR not found')
+            elif cmd == 'G':
+                res = tuple_space.pop(key, 'ERR not found')
+            else:
+                res = 'ERR unknown'
+        
+        conn.send((format_length(res) + res).encode())
+    conn.close()
